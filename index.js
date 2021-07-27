@@ -82,7 +82,7 @@ client.on('message', async (message) => {
   if (message.author.bot) {
     return
   }
-  if (message.content.slice(2).includes("mute")) {
+  if (message.content.slice(2).toLowerCase().includes("mute")) {
     if(message.member.roles.cache.some(r => r.name === "Mod")){
       if (message.mentions.members.first()) {
         let role = message.guild.roles.cache.find(r => r.name === "Muted");
@@ -99,7 +99,7 @@ client.on('message', async (message) => {
       message.channel.send(`Nope, noppers, nadda.`);
     }
   }
-  if (message.content.slice(2).includes("unmute")) {
+  if (message.content.slice(2).toLowerCase().includes("unmute")) {
     if(message.member.roles.cache.some(r => r.name === "Mod")){
       if (message.mentions.members.first()) {
         let role = message.guild.roles.cache.find(r => r.name === "Muted");
@@ -117,7 +117,7 @@ client.on('message', async (message) => {
     }
   }
   //Help
-  if ((message.content.slice(2)) == 'help') {
+  if ((message.content.slice(2).toLowerCase()) == 'help') {
     
     message.delete()
     const help = new Discord.MessageEmbed()
@@ -129,12 +129,12 @@ client.on('message', async (message) => {
     //set used to true so it adds one more to true
     var used = true
   }
-  if (message.content.slice(2).includes("reply")) {
+  if (message.content.slice(2).toLowerCase().includes("reply")) {
     //reply k
     message.reply('Hello...')
     var used = true
   }
-  if ((message.content.slice(2)) == 'NSFW') {
+  if ((message.content.slice(2).toLowerCase()) == 'NSFW') {
     //This is the wrong bot bro
     message.reply('I\'m not a NSFW bot!!!! I\'m a mod bot' );
     var used = true
