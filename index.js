@@ -200,7 +200,4 @@ client.on('message', async (message) => {
     message.reply(timesused)
   }
 });
-
-
-
 client.login(process.env.TOKEN)
