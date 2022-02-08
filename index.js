@@ -191,7 +191,6 @@ client.on('message', async (message) => {
     console.log(usedtimes)
     usedtimes +=1
     fsLibrary.writeFileSync('times_used.int',usedtimes)
-    
   };
   if ((message.content.slice(2)) == 'hmthybu'){
     var used = true
