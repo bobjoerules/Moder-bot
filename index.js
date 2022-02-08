@@ -156,7 +156,8 @@ client.on('message', async (message) => {
     //send list of things bot can do
     help.setTitle('Help List:')
     help.setColor('#5cf000')
-    help.setDescription('m!mute \'@ user\' = Mute that user \n m!unmute \'@ user\' = Unmute that user \n(only people with the \'Mod\' role can use moder commands)\n m!ban \'@ user\' to ban a user')
+    help.setDescription('• m!mute \'@ user\' = Mute that user \n• m!unmute \'@ user\' = Unmute that user \n• m!ban \'@ user\' to ban a user')
+    help.setFooter('(Only people with the \'Mod\' role can use moder commands. Also working on being able to use id to ban.)')
     message.channel.send(help)
     //set used to true so it adds one more to true
     var used = true
