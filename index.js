@@ -33,7 +33,7 @@ client.once('ready', () => {
     restartlog.setTitle('Moder bot has been restarted')
     restartlog.setColor('#ffff00')
     restartlog.setTimestamp()
-  client.channels.cache.get('862152384238845982').send(restartlog)
+  client.channels.cache.get('838264759899652137').send(restartlog)
   //Set status and activity
   client.user.setPresence({
    status: "online"
@@ -58,15 +58,18 @@ client.on('message', async (message) => {
   }
   if ((message.content) == 'can i kick?'){
     if (!message.member.hasPermission('KICK_MEMBERS')) {
-	    message.channel.send('you can\'t kick people lol!!!')
+      const kick = new Discord.MessageEmbed()
+      kick.setColor('red')
+      kick.setDescription('you can\'t kick people lol!!!')
+	    message.channel.send(kick)
     } else {
-      message.channel.send('u can')
+      const kick = new Discord.MessageEmbed()
+      kick.setColor('green')
+      kick.setDescription('u can kick people on this server. Why don\'t you try it on some mean people.')
+	    message.channel.send(kick)
     }
   }
-  if (message.content.startsWith('user')) {
-    let rMember = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args[0].toLocaleLowerCase()) || message.guild.members.cache.find(ro => ro.displayName.toLowerCase() === args[0].toLocaleLowerCase());
-    message.channel.send(rMember)
-  }
+
   if ((message.content) == '!help') {
     
     const Help = new Discord.MessageEmbed()
@@ -82,38 +85,67 @@ client.on('message', async (message) => {
   if (message.author.bot) {
     return
   }
-  if (message.content.slice(2).toLowerCase().includes("mute")) {
+  if (message.content.slice(1).toLowerCase().includes("!mute")) {
+    if(!message.guild.roles.cache.find(r => r.name === "Muted")) {
+      const nomuterole = new Discord.MessageEmbed()
+      nomuterole.setTitle('No Mute Role')
+      nomuterole.setDescription('Pls make a role called "Muted" over the roles that can be muted and in channel permissions make the channels you dont want the muted person to talk in muted role not allowed to use permisions of talking')
+      message.channel.send(nomuterole)
+    }
     if(message.member.roles.cache.some(r => r.name === "Mod")){
       if (message.mentions.members.first()) {
         let role = message.guild.roles.cache.find(r => r.name === "Muted");
         let member = message.mentions.members.first();
         member.roles.add(role)
-        message.channel.send(member +  'was Muted. LOL')
+        message.channel.send(member + ' was Muted. LOL. The reason is: '+ message.content.slice(7))
       } else {
         let role = message.guild.roles.cache.find(r => r.name === "Muted");
         let userID = message.content.slice(12).split(' ?')[0]
         message.guild.members.cache.get(userID).roles.add(role)
-        message.channel.send(userID + ' was Muted. LOL')
+        message.channel.send(userID + ' was Muted. LOL. The reason is: '+ message.content.slice(7))
       }
     } else {
       message.channel.send(`Nope, noppers, nadda.`);
     }
   }
+  if (message.content.slice(1).toLowerCase().includes("!ban")) {
+    if (message.member.roles.cache.some(r => r.name === "Mod")){
+      if (message.mentions.members.first()) {
+        let member = message.mentions.members.first();
+        message.mentions.members.first().ban();
+        console.log(message.mentions.members.first())
+        message.channel.send(member + ' was banned. LOL. The reason is: '+ message.content.slice(7))
+      }
+    } else {
+      message.channel.send(`Nope, noppers, nadda.`);
+    }
+  } 
+  if (message.content.slice(1).toLowerCase().includes("!unban")) {
+    if (message.member.roles.cache.some(r => r.name === "Mod")){
+      if (message.mentions.members.first()) {
+        let member = message.mentions.members.first();
+        message.guild.members.unban(member);
+        message.channel.send(member + ' was unbanned. LOL. The reason is: '+ message.content.slice(7))
+      }
+    } else {
+      message.channel.send(`Nope, noppers, nadda.`);
+    }
+  } 
   if (message.content.slice(2).toLowerCase().includes("unmute")) {
     if(message.member.roles.cache.some(r => r.name === "Mod")){
       if (message.mentions.members.first()) {
         let role = message.guild.roles.cache.find(r => r.name === "Muted");
         let member = message.mentions.members.first();
         member.roles.remove(role)
-        message.channel.send(member + ' was UnMuted. )-:')
+        message.channel.send(member + ' was UnMuted. So sad. The reason is: '+ message.content.slice(8))
       } else {
         let role = message.guild.roles.cache.find(r => r.name === "Muted");
         let userID = message.content.slice(14).split(' ?')[0]
         message.guild.members.cache.get(userID).roles.remove(role)
-        message.channel.send(userID + ' was UnMuted. )-:')
+        message.channel.send(member + ' was UnMuted. So sad. The reason is: '+ message.content.slice(8))
       }
     } else {
-      message.channel.send(`Nope, noppers, nadda.`);
+      message.channel.send(`Sry bud you don't have the "Mod" role. You can't do that.`);
     }
   }
   //Help
@@ -124,7 +156,7 @@ client.on('message', async (message) => {
     //send list of things bot can do
     help.setTitle('Help List:')
     help.setColor('#5cf000')
-    help.setDescription('m!mute \'@ user or user ID\' = Mute that user \n m!unmute \'@ user or user ID\' = Unmute that user \n(only people with the \'Mod\' role can use moder commands)')
+    help.setDescription('m!mute \'@ user\' = Mute that user \n m!unmute \'@ user\' = Unmute that user \n(only people with the \'Mod\' role can use moder commands)\n m!ban \'@ user\' to ban a user')
     message.channel.send(help)
     //set used to true so it adds one more to true
     var used = true
@@ -134,13 +166,13 @@ client.on('message', async (message) => {
     message.reply('Hello...')
     var used = true
   }
-  if ((message.content.slice(2).toLowerCase()) == 'NSFW') {
+  if ((message.content.slice(2).toLowerCase()) == 'nsfw') {
     //This is the wrong bot bro
     message.reply('I\'m not a NSFW bot!!!! I\'m a mod bot' );
     var used = true
   }
   //suggest command
-  if (message.content.slice(2).startsWith('suggestion')) {
+  if (message.content.slice(2).startsWith('suggestion ')) {
     const suggest = new Discord.MessageEmbed()
     suggest.setTitle('Suggestion made by: ' + message.author.username)
     suggest.setColor('#5cf000')
@@ -148,11 +180,11 @@ client.on('message', async (message) => {
     suggest.setTimestamp()
     var used = true
     //send to bot suggestions channel
-    client.channels.cache.get('862150641065656360').send(suggest)
+    client.channels.cache.get('846452836615061564').send(suggest)
   }
   //button test
   
-  if (used) {
+  if (used = true) {
     //add used
     var usedtimes = 0
     usedtimes = Number(fsLibrary.readFileSync('times_used.int','utf8'))
@@ -161,7 +193,7 @@ client.on('message', async (message) => {
     fsLibrary.writeFileSync('times_used.int',usedtimes)
     
   };
-  if ((message.content.slice(2)) == 'how many times have you been used?'){
+  if ((message.content.slice(2)) == 'hmthybu'){
     var used = true
     const timesused = new Discord.MessageEmbed()
     timesused.setDescription('I have been used ' + fsLibrary.readFileSync('times_used.int','utf8') + ' times')
